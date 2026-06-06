@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ARISE — Solo Leveling Fitness System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a12;color:#c8d4f0;font-family:'Rajdhani',sans-serif;min-height:100vh}
+.scanline{position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:9999}
+.screen{display:none;min-height:100vh}.screen.active{display:flex}
+#loginScreen{flex-direction:column;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden}
+.bg-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.particle{position:absolute;width:2px;height:2px;background:#7855ff;border-radius:50%;animation:float linear infinite;opacity:0}
+@keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:0.6}90%{opacity:0.3}100%{transform:translateY(-100px) scale(1.5);opacity:0}}
+.login-logo{text-align:center;margin-bottom:2.5rem;position:relative;z-index:1}
+.login-system-text{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:5px;color:#7855ff;margin-bottom:8px;animation:pulse 2s infinite}
+.login-title{font-size:36px;font-weight:700;color:#e8eeff;letter-spacing:4px}
+.login-subtitle{font-size:13px;color:#445;font-family:'Share Tech Mono',monospace;letter-spacing:2px;margin-top:6px}
+.login-card{background:rgba(15,12,30,0.9);border:1px solid rgba(120,80,255,0.3);padding:2rem;width:100%;max-width:360px;position:relative;z-index:1}
+.login-card::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,#7855ff,transparent)}
+.login-card-title{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:#7855ff;text-align:center;margin-bottom:1.5rem;text-transform:uppercase}
+.google-btn{width:100%;padding:12px;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:none;border-radius:2px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:#3c4043;transition:box-shadow 0.2s;margin-bottom:1rem}
+.google-btn:hover{box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.divider{display:flex;align-items:center;gap:10px;margin:1rem 0}
+.divider-line{flex:1;height:1px;background:rgba(120,80,255,0.2)}
+.divider-text{font-family:'Share Tech Mono',monospace;font-size:9px;color:#445;letter-spacing:2px}
+.sl-input{width:100%;padding:10px 12px;background:rgba(120,80,255,0.05);border:1px solid rgba(120,80,255,0.25);color:#c8d4f0;font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s}
+.sl-input:focus{border-color:#7855ff}.sl-input::placeholder{color:#334}
+.input-group{margin-bottom:10px}
+.sl-btn{width:100%;padding:11px;background:rgba(120,80,255,0.15);border:1px solid #7855ff;color:#c8d4f0;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;transition:all 0.2s;margin-top:4px}
+.sl-btn:hover{background:rgba(120,80,255,0.3)}
+.login-toggle{text-align:center;margin-top:12px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#445}
+.login-toggle span{color:#7855ff;cursor:pointer}
+#onboardScreen{flex-direction:column;align-items:center;justify-content:center;padding:1.5rem}
+.onboard-wrap{width:100%;max-width:420px}
+.onboard-header{text-align:center;margin-bottom:2rem}
+.onboard-sys{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:4px;color:#7855ff;margin-bottom:6px}
+.onboard-q{font-size:22px;font-weight:700;color:#e8eeff;line-height:1.3}
+.onboard-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:#445;margin-top:6px}
+.onboard-options{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
+.onboard-option{padding:14px 16px;border:1px solid rgba(120,80,255,0.2);background:rgba(120,80,255,0.04);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px}
+.onboard-option:hover{border-color:rgba(120,80,255,0.5);background:rgba(120,80,255,0.08)}
+.onboard-option.selected{border-color:#7855ff;background:rgba(120,80,255,0.15)}
+.onboard-option-icon{font-size:22px;flex-shrink:0}
+.onboard-option-title{font-size:15px;font-weight:600;color:#e8eeff}
+.onboard-option-desc{font-size:11px;color:#556;font-family:'Share Tech Mono',monospace;margin-top:2px}
+.onboard-progress{display:flex;gap:6px;justify-content:center;margin-bottom:1.5rem}
+.onboard-dot{width:24px;height:3px;background:rgba(120,80,255,0.2);transition:background 0.3s}
+.onboard-dot.done{background:#7855ff}
+.step-btn-row{display:flex;gap:8px}
+.step-btn-back{flex:1;padding:11px;background:transparent;border:1px solid rgba(120,80,255,0.3);color:#556;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;transition:all 0.2s}
+.step-btn-back:hover{color:#c8d4f0;border-color:#7855ff}
+.step-btn-next{flex:2;padding:11px;background:rgba(120,80,255,0.15);border:1px solid #7855ff;color:#c8d4f0;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;transition:all 0.2s}
+.step-btn-next:hover{background:rgba(120,80,255,0.3)}
+.step-btn-next:disabled{opacity:0.3;cursor:not-allowed}
+#awakenScreen{flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
+.awaken-rank{font-size:80px;font-weight:700;color:#e8eeff;letter-spacing:8px;animation:glow 1.5s infinite alternate;font-family:'Rajdhani',sans-serif}
+.awaken-title{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:6px;color:#7855ff;margin-bottom:16px;animation:pulse 2s infinite}
+.awaken-name{font-size:28px;font-weight:700;color:#c8d4f0;letter-spacing:3px;margin-top:8px}
+.awaken-sub{font-family:'Share Tech Mono',monospace;font-size:11px;color:#445;margin-top:8px;letter-spacing:2px}
+.awaken-btn{margin-top:2rem;padding:12px 36px;border:1px solid #7855ff;background:transparent;color:#c8d4f0;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:4px;cursor:pointer;transition:all 0.2s;text-transform:uppercase}
+.awaken-btn:hover{background:rgba(120,80,255,0.2)}
+#appScreen{flex-direction:column;align-items:stretch;padding:0}
+.app{max-width:480px;margin:0 auto;padding:1rem;width:100%}
+.system-header{text-align:center;padding:1.5rem 0 1rem;border-bottom:1px solid rgba(120,80,255,0.3);margin-bottom:1.5rem}
+.system-title{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:4px;color:#7855ff;margin-bottom:4px}
+.player-name{font-size:28px;font-weight:700;color:#e8eeff;letter-spacing:2px}
+.rank-badge{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:13px;padding:4px 16px;border:1px solid;margin-top:6px;letter-spacing:3px}
+.rank-e{border-color:#888;color:#aaa}.rank-d{border-color:#4a9;color:#4a9}.rank-c{border-color:#4af;color:#4af}.rank-b{border-color:#a4f;color:#a4f}.rank-a{border-color:#fa4;color:#fa4}.rank-s{border-color:#f8c;color:#f8c;background:rgba(255,120,180,0.05)}
+.xp-bar-wrap{margin:1rem 0}
+.xp-label{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:11px;color:#7855ff;margin-bottom:6px}
+.xp-track{height:6px;background:rgba(120,80,255,0.15);border:1px solid rgba(120,80,255,0.3);overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,#4422cc,#7855ff);transition:width 0.6s cubic-bezier(0.4,0,0.2,1)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem}
+.stat-card{background:rgba(120,80,255,0.06);border:1px solid rgba(120,80,255,0.2);padding:10px 8px;text-align:center}
+.stat-icon{font-size:18px;margin-bottom:2px}
+.stat-name{font-family:'Share Tech Mono',monospace;font-size:9px;color:#7855ff;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.stat-val{font-size:22px;font-weight:700;color:#e8eeff;font-family:'Share Tech Mono',monospace}
+.stat-bar-track{height:3px;background:rgba(120,80,255,0.15);margin-top:4px}
+.stat-bar-fill{height:100%;transition:width 0.5s ease}
+.section-title{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:#7855ff;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:rgba(120,80,255,0.3)}
+.quest-list{margin-bottom:1.5rem;display:flex;flex-direction:column;gap:6px}
+.quest-item{display:flex;align-items:center;gap:10px;background:rgba(10,10,20,0.8);border:1px solid rgba(120,80,255,0.2);padding:10px 12px;cursor:pointer;transition:all 0.2s;user-select:none}
+.quest-item:hover{border-color:rgba(120,80,255,0.5);background:rgba(120,80,255,0.05)}
+.quest-item.done{opacity:0.5;border-color:rgba(120,80,255,0.1)}
+.quest-item.done .quest-name{text-decoration:line-through}
+.quest-check{width:18px;height:18px;flex-shrink:0;border:1px solid rgba(120,80,255,0.5);display:flex;align-items:center;justify-content:center;font-size:11px;color:#7855ff}
+.quest-item.done .quest-check{background:rgba(120,80,255,0.2);border-color:#7855ff}
+.quest-info{flex:1}.quest-name{font-size:14px;font-weight:600;color:#c8d4f0}
+.quest-detail{font-size:11px;color:#556;margin-top:1px;font-family:'Share Tech Mono',monospace}
+.quest-xp{font-family:'Share Tech Mono',monospace;font-size:11px;color:#7855ff}
+.meal-card{background:rgba(10,10,20,0.8);border:1px solid rgba(120,80,255,0.15);padding:10px 12px;margin-bottom:6px}
+.meal-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:#7855ff;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.meal-items{font-size:13px;color:#9ab;line-height:1.6}
+.nav-tabs{display:flex;border-bottom:1px solid rgba(120,80,255,0.2);margin-bottom:1.5rem;overflow-x:auto}
+.nav-tab{flex:1;min-width:55px;padding:10px 4px;text-align:center;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:#556;text-transform:uppercase;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap}
+.nav-tab.active{color:#7855ff;border-bottom-color:#7855ff}
+.progress-summary{font-family:'Share Tech Mono',monospace;font-size:11px;color:#556;text-align:center;margin-bottom:1rem}
+.progress-summary span{color:#7855ff}
+.reset-btn{width:100%;padding:10px;border:1px solid rgba(120,80,255,0.3);background:transparent;color:#556;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;cursor:pointer;text-transform:uppercase;margin-top:1rem;transition:all 0.2s}
+.reset-btn:hover{border-color:#7855ff;color:#9877ff}
+.logout-btn{width:100%;padding:10px;border:1px solid rgba(255,80,80,0.2);background:transparent;color:#644;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;cursor:pointer;text-transform:uppercase;margin-top:8px;transition:all 0.2s}
+.logout-btn:hover{border-color:rgba(255,80,80,0.5);color:#f88}
+.profile-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:#7855ff;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.profile-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.profile-field{margin-bottom:10px}
+.profile-textarea{width:100%;padding:10px 12px;background:rgba(120,80,255,0.05);border:1px solid rgba(120,80,255,0.25);color:#c8d4f0;font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;resize:vertical;min-height:70px;transition:border-color 0.2s}
+.profile-textarea:focus{border-color:#7855ff}.profile-textarea::placeholder{color:#334}
+.generate-btn{width:100%;padding:12px;background:rgba(120,80,255,0.15);border:1px solid #7855ff;color:#c8d4f0;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;transition:all 0.2s;margin-top:4px}
+.generate-btn:hover{background:rgba(120,80,255,0.3)}
+.ai-plan-wrap{margin-top:1.5rem}
+.plan-block{background:rgba(10,10,20,0.9);border:1px solid rgba(120,80,255,0.25);padding:14px;margin-bottom:8px}
+.plan-block-title{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:#7855ff;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(120,80,255,0.2)}
+.plan-row{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid rgba(120,80,255,0.06);font-size:13px}
+.plan-row:last-child{border-bottom:none}
+.plan-day{font-family:'Share Tech Mono',monospace;font-size:10px;color:#7855ff;min-width:36px;flex-shrink:0;padding-top:1px}
+.plan-val{color:#9ab;line-height:1.5;text-align:right;flex:1;padding-left:8px}
+.plan-note{font-size:12px;color:#9ab;line-height:1.7}
+.bmi-badge{display:inline-block;padding:3px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;margin-left:6px;border:1px solid}
+.bmi-under{border-color:#4af;color:#4af}.bmi-normal{border-color:#4a9;color:#4a9}.bmi-over{border-color:#fa4;color:#fa4}.bmi-obese{border-color:#f74;color:#f74}
+.warn-box{background:rgba(255,100,50,0.06);border:1px solid rgba(255,100,50,0.3);padding:10px 12px;margin-bottom:8px;font-size:12px;color:#c98;font-family:'Share Tech Mono',monospace;line-height:1.7}
+.disclaimer{font-family:'Share Tech Mono',monospace;font-size:9px;color:#445;text-align:center;margin-top:1rem;line-height:1.6;letter-spacing:1px}
+.notify{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(10,10,20,0.95);border:1px solid #7855ff;padding:10px 20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#c8d4f0;z-index:10000;letter-spacing:2px;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
+.notify.show{opacity:1}
+.level-up-overlay{position:fixed;inset:0;background:rgba(5,0,20,0.97);z-index:20000;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s}
+.level-up-overlay.show{opacity:1;pointer-events:all}
+.level-up-text{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:6px;color:#7855ff;margin-bottom:12px;animation:pulse 1s infinite}
+.level-up-rank{font-size:72px;font-weight:700;color:#e8eeff;letter-spacing:8px;font-family:'Rajdhani',sans-serif;animation:glow 1s infinite alternate}
+.level-up-sub{font-family:'Share Tech Mono',monospace;font-size:12px;color:#7855ff;margin-top:8px;letter-spacing:3px}
+.level-up-btn{margin-top:32px;padding:10px 28px;border:1px solid #7855ff;background:transparent;color:#c8d4f0;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;cursor:pointer;text-transform:uppercase}
+.level-up-btn:hover{background:rgba(120,80,255,0.1)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+@keyframes glow{from{text-shadow:0 0 20px rgba(120,80,255,0.5)}to{text-shadow:0 0 40px rgba(120,80,255,0.9),0 0 80px rgba(120,80,255,0.4)}}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="notify" id="notify"></div>
+<div class="level-up-overlay" id="levelUpOverlay">
+  <div class="level-up-text">— rank up —</div>
+  <div class="level-up-rank" id="levelUpRank">D</div>
+  <div class="level-up-sub" id="levelUpSub">you have become stronger</div>
+  <button class="level-up-btn" onclick="closeLevelUp()">arise</button>
+</div>
+
+<!-- LOGIN -->
+<div class="screen active" id="loginScreen">
+  <div class="bg-particles" id="particles"></div>
+  <div class="login-logo">
+    <div class="login-system-text">⬡ system detected ⬡</div>
+    <div class="login-title">ARISE</div>
+    <div class="login-subtitle">solo leveling fitness system</div>
+  </div>
+  <div class="login-card">
+    <div class="login-card-title" id="loginCardTitle">hunter authentication</div>
+    <div id="loginForm">
+      <button class="google-btn" onclick="googleLogin()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+      <div class="divider"><div class="divider-line"></div><div class="divider-text">or</div><div class="divider-line"></div></div>
+      <div class="input-group"><input class="sl-input" type="text" id="loginName" placeholder="Hunter name"/></div>
+      <div class="input-group"><input class="sl-input" type="password" id="loginPass" placeholder="Password"/></div>
+      <button class="sl-btn" onclick="emailLogin()">enter the system</button>
+      <div class="login-toggle">no account? <span onclick="showRegister()">register</span></div>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="input-group"><input class="sl-input" type="text" id="regName" placeholder="Hunter name"/></div>
+      <div class="input-group"><input class="sl-input" type="password" id="regPass" placeholder="Set password"/></div>
+      <button class="sl-btn" onclick="register()">awaken</button>
+      <div class="login-toggle">have account? <span onclick="showLogin()">login</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div class="screen" id="onboardScreen">
+  <div class="onboard-wrap">
+    <div class="onboard-progress" id="onboardProgress"></div>
+    <div id="stepContainer"></div>
+  </div>
+</div>
+
+<!-- AWAKENING -->
+<div class="screen" id="awakenScreen">
+  <div class="awaken-title">— the system has chosen you —</div>
+  <div class="awaken-rank" id="awakenRankDisplay">E</div>
+  <div class="awaken-name" id="awakenNameDisplay">HUNTER</div>
+  <div class="awaken-sub" id="awakenSubDisplay">your journey begins now</div>
+  <button class="awaken-btn" onclick="enterApp()">enter the dungeon</button>
+</div>
+
+<!-- MAIN APP -->
+<div class="screen" id="appScreen">
+  <div class="app">
+    <div class="system-header">
+      <div class="system-title">⬡ system window ⬡</div>
+      <div class="player-name" id="appPlayerName">HUNTER</div>
+      <div class="rank-badge rank-e" id="rankBadge">RANK — E</div>
+      <div class="xp-bar-wrap">
+        <div class="xp-label"><span>EXP</span><span id="xpLabel">0 / 100</span></div>
+        <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="progress-summary">quests completed today: <span id="questCount">0</span> / <span id="questTotal">0</span></div>
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="showTab('quests',this)">Quests</div>
+      <div class="nav-tab" onclick="showTab('stats',this)">Stats</div>
+      <div class="nav-tab" onclick="showTab('diet',this)">Diet</div>
+      <div class="nav-tab" onclick="showTab('coach',this)">Coach</div>
+    </div>
+    <div class="tab-content active" id="tab-quests">
+      <div class="section-title">daily quests</div>
+      <div class="quest-list" id="questList"></div>
+      <button class="reset-btn" onclick="resetQuests()">↺ reset daily quests</button>
+      <button class="logout-btn" onclick="logout()">⎋ logout</button>
+    </div>
+    <div class="tab-content" id="tab-stats" style="display:none">
+      <div class="section-title">player stats</div>
+      <div class="stats-grid" id="statsGrid"></div>
+    </div>
+    <div class="tab-content" id="tab-diet" style="display:none">
+      <div class="section-title">nutrition protocol</div>
+      <div class="diet-section" id="dietSection"></div>
+    </div>
+    <div class="tab-content" id="tab-coach" style="display:none">
+      <div class="section-title">personal profile</div>
+      <div class="profile-row">
+        <div class="profile-field"><div class="profile-label">Age</div><input class="sl-input" type="number" id="pAge" placeholder="e.g. 17" min="10" max="100"/></div>
+        <div class="profile-field"><div class="profile-label">Gender</div>
+          <select class="sl-input" id="pGender"><option value="" disabled selected>select</option><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="profile-field"><div class="profile-label">Height (cm)</div><input class="sl-input" type="number" id="pHeight" placeholder="e.g. 170"/></div>
+        <div class="profile-field"><div class="profile-label">Weight (kg)</div><input class="sl-input" type="number" id="pWeight" placeholder="e.g. 65"/></div>
+      </div>
+      <div class="profile-field"><div class="profile-label">Fitness Goal</div>
+        <select class="sl-input" id="pGoal"><option value="" disabled selected>select your goal</option><option>Lose weight / burn fat</option><option>Build muscle / gain strength</option><option>Improve endurance / cardio</option><option>Overall fitness and health</option><option>Increase flexibility and mobility</option></select>
+      </div>
+      <div class="profile-field"><div class="profile-label">Health Issues / Injuries</div>
+        <textarea class="profile-textarea" id="pHealth" placeholder="e.g. lower back pain, knee injury, asthma, diabetes... or type 'none'"></textarea>
+      </div>
+      <div class="profile-field"><div class="profile-label">Diet Preference</div>
+        <select class="sl-input" id="pDiet"><option value="" disabled selected>select</option><option>Vegetarian</option><option>Non-vegetarian</option><option>Vegan</option><option>No preference</option></select>
+      </div>
+      <div class="profile-field"><div class="profile-label">Equipment Available</div>
+        <select class="sl-input" id="pEquip"><option value="" disabled selected>select</option><option>No equipment (bodyweight only)</option><option>Basic (dumbbells / resistance bands)</option><option>Full gym access</option></select>
+      </div>
+      <div class="profile-field"><div class="profile-label">Anything else?</div>
+        <textarea class="profile-textarea" id="pExtra" placeholder="e.g. student, busy schedule, poor sleep..."></textarea>
+      </div>
+      <button class="generate-btn" id="generateBtn" onclick="generatePlan()">⬡ generate my personal protocol</button>
+      <div class="disclaimer">⚠ this is a fitness starting guide, not medical advice.<br>consult a doctor if you have serious health conditions.</div>
+      <div class="ai-plan-wrap" id="aiPlanWrap" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const RANKS=['E','D','C','B','A','S'];
+const RANK_COLORS={E:'rank-e',D:'rank-d',C:'rank-c',B:'rank-b',A:'rank-a',S:'rank-s'};
+const XP_PER_RANK=[100,200,350,500,750,999];
+const ONBOARD_STEPS=[
+  {sys:'system scan',q:'What is your current fitness level?',sub:'the system must assess your power',key:'level',options:[{icon:'😴',title:'Beginner',desc:'rarely exercise'},{icon:'🚶',title:'Casual',desc:'light activity 1-2x week'},{icon:'💪',title:'Intermediate',desc:'train 3-4x week'},{icon:'🔥',title:'Advanced',desc:'intense training 5+ days'}]},
+  {sys:'analyzing goals',q:'What is your primary goal?',sub:'choose your path, hunter',key:'goal',options:[{icon:'⚡',title:'Build Strength',desc:'gain power and muscle'},{icon:'🏃',title:'Lose Weight',desc:'burn fat and get lean'},{icon:'🫀',title:'Improve Endurance',desc:'stamina and cardio'},{icon:'⚖️',title:'Overall Fitness',desc:'balanced development'}]},
+  {sys:'body scan',q:'How old are you?',sub:'age affects your training protocol',key:'age',options:[{icon:'🧒',title:'Under 18',desc:'young hunter protocol'},{icon:'🧑',title:'18–25',desc:'peak performance age'},{icon:'🧔',title:'26–35',desc:'prime hunter years'},{icon:'👨',title:'36+',desc:'veteran hunter protocol'}]},
+  {sys:'equipment check',q:'What equipment do you have?',sub:'the system will tailor your quests',key:'equipment',options:[{icon:'🏠',title:'No Equipment',desc:'bodyweight only'},{icon:'🏋️',title:'Basic Gear',desc:'dumbbells / resistance bands'},{icon:'🏟️',title:'Full Gym',desc:'complete gym access'}]},
+];
+const QUESTS_BY_RANK={
+  E:[{name:'Push-ups',detail:'3 sets × 10 reps',xp:15,icon:'💪'},{name:'Brisk Walk',detail:'20 minutes',xp:15,icon:'🚶'},{name:'Bodyweight Squats',detail:'3 sets × 15 reps',xp:15,icon:'🦵'},{name:'Plank Hold',detail:'3 sets × 20 sec',xp:20,icon:'⚡'},{name:'Stretching',detail:'10 minutes full body',xp:10,icon:'🌀'}],
+  D:[{name:'Push-ups',detail:'4 sets × 15 reps',xp:20,icon:'💪'},{name:'Jogging',detail:'20 minutes',xp:25,icon:'🏃'},{name:'Lunges',detail:'3 sets × 12 each leg',xp:20,icon:'🦵'},{name:'Plank Hold',detail:'3 sets × 40 sec',xp:20,icon:'⚡'},{name:'Mountain Climbers',detail:'3 sets × 20 reps',xp:25,icon:'🔥'}],
+  C:[{name:'Pull-ups',detail:'3 sets × 8 reps',xp:30,icon:'💪'},{name:'Running',detail:'30 minutes',xp:30,icon:'🏃'},{name:'Jump Squats',detail:'4 sets × 15 reps',xp:25,icon:'🦵'},{name:'Burpees',detail:'3 sets × 10 reps',xp:30,icon:'🔥'},{name:'Core Circuit',detail:'Plank + crunches 15 min',xp:25,icon:'⚡'}],
+  B:[{name:'Weighted Push-ups',detail:'4 sets × 20 reps',xp:40,icon:'💪'},{name:'5K Run',detail:'Under 30 min',xp:50,icon:'🏃'},{name:'Pistol Squats',detail:'3 sets × 8 each',xp:40,icon:'🦵'},{name:'Muscle-up Attempts',detail:'3 sets × 5 reps',xp:45,icon:'🔥'},{name:'HIIT Session',detail:'20 min full intensity',xp:50,icon:'⚡'}],
+  A:[{name:'One-arm Push-up',detail:'3 sets × 5 each side',xp:60,icon:'💪'},{name:'10K Run',detail:'Under 50 min',xp:70,icon:'🏃'},{name:'Weighted Squats',detail:'5 sets × 10 reps heavy',xp:60,icon:'🦵'},{name:'Ring Dips',detail:'4 sets × 12 reps',xp:60,icon:'🔥'},{name:'Sprint Intervals',detail:'10 × 100m sprints',xp:70,icon:'⚡'}],
+  S:[{name:'Arise Protocol',detail:'100 push-ups, 100 squats, 10K run',xp:150,icon:'👑'},{name:'Shadow Monarch Training',detail:'90 min full body circuit',xp:200,icon:'⚡'},{name:'Endurance Trial',detail:'Run 15km non-stop',xp:180,icon:'🏃'},{name:'Power Surge',detail:'Max weight compound lifts',xp:160,icon:'🔥'},{name:'Recovery Mastery',detail:'Ice bath + 30 min meditation',xp:100,icon:'🌀'}],
+};
+const DIET_BY_RANK={
+  E:{note:'Beginner protocol',meals:[{l:'Morning',v:'Oats + banana + 2 boiled eggs'},{l:'Midday',v:'Rice + dal + sabzi + curd'},{l:'Snack',v:'Banana + peanuts'},{l:'Dinner',v:'Roti + chicken/paneer + salad'},{l:'Night',v:'Milk + nuts'}]},
+  D:{note:'Increasing protein',meals:[{l:'Morning',v:'Oats + protein shake + 3 eggs'},{l:'Midday',v:'Brown rice + grilled chicken/paneer'},{l:'Pre-workout',v:'Banana + peanut butter'},{l:'Post-workout',v:'Protein shake + banana'},{l:'Dinner',v:'Roti + egg curry + salad'}]},
+  C:{note:'Performance fuel',meals:[{l:'Morning',v:'4 eggs + toast + orange'},{l:'Mid-morning',v:'Protein shake + apple'},{l:'Lunch',v:'Brown rice + 150g chicken + veggies'},{l:'Pre-workout',v:'Oats + honey'},{l:'Dinner',v:'Fish/paneer + quinoa + salad'}]},
+  B:{note:'High performance',meals:[{l:'Morning',v:'5 eggs + oats + creatine'},{l:'Mid-morning',v:'Protein shake + banana'},{l:'Lunch',v:'200g chicken + rice + broccoli'},{l:'Post-workout',v:'Whey + fast carbs'},{l:'Dinner',v:'200g lean meat + sweet potato'}]},
+  A:{note:'Elite nutrition',meals:[{l:'Morning',v:'6 eggs + oats + creatine'},{l:'Lunch',v:'250g chicken + 2 cups rice + greens'},{l:'Pre-workout',v:'Pre-workout + 50g carbs'},{l:'Post-workout',v:'Whey 40g + rice cakes'},{l:'Dinner',v:'250g beef/fish + quinoa + salad'}]},
+  S:{note:'Shadow Monarch Protocol',meals:[{l:'Pre-dawn',v:'BCAA + electrolytes'},{l:'Sunrise',v:'8 eggs + oats + creatine'},{l:'Lunch',v:'300g chicken + 3 cups rice + veggies'},{l:'Post-workout',v:'Whey 50g + dextrose'},{l:'Dinner',v:'300g steak/salmon + sweet potato'}]},
+};
+const STARTING_RANK={Beginner:'E',Casual:'E',Intermediate:'D',Advanced:'C'};
+const STAT_BOOSTS={'Build Strength':{STR:8,VIT:4,END:3,AGI:2,INT:2,SEN:1},'Lose Weight':{AGI:8,END:6,STR:3,VIT:3,INT:1,SEN:1},'Improve Endurance':{END:8,AGI:6,VIT:4,STR:2,INT:1,SEN:1},'Overall Fitness':{STR:4,END:4,AGI:4,VIT:4,INT:2,SEN:2}};
+
+let onboardAnswers={},currentStep=0;
+let state={rank:'E',xp:0,stats:{STR:5,END:5,AGI:5,VIT:5,INT:5,SEN:5},completed:[],playerName:'HUNTER',profile:{}};
+
+function getDB(){try{return JSON.parse(localStorage.getItem('sl_db')||'{}')}catch(e){return{}}}
+function saveDB(db){try{localStorage.setItem('sl_db',JSON.stringify(db))}catch(e){}}
+function saveState(){const db=getDB();if(state.playerName){db[state.playerName.toLowerCase()]={...db[state.playerName.toLowerCase()],state};saveDB(db)}}
+function loadState(name){const db=getDB();const e=db[name.toLowerCase()];if(e&&e.state){state=e.state;return true}return false}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showNotify(msg){const el=document.getElementById('notify');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200)}
+function closeLevelUp(){document.getElementById('levelUpOverlay').classList.remove('show')}
+
+function googleLogin(){const name='Hunter_'+Math.floor(Math.random()*9000+1000);const db=getDB();if(!db[name.toLowerCase()]){state.playerName=name;startOnboarding()}else{loadState(name);showAwakening(false)}}
+function showRegister(){document.getElementById('loginForm').style.display='none';document.getElementById('registerForm').style.display='block';document.getElementById('loginCardTitle').textContent='create account'}
+function showLogin(){document.getElementById('registerForm').style.display='none';document.getElementById('loginForm').style.display='block';document.getElementById('loginCardTitle').textContent='hunter authentication'}
+function register(){const name=document.getElementById('regName').value.trim();const pass=document.getElementById('regPass').value.trim();if(!name||!pass){showNotify('fill all fields');return}const db=getDB();if(db[name.toLowerCase()]){showNotify('hunter already exists');return}db[name.toLowerCase()]={pass,state:null};saveDB(db);state.playerName=name;startOnboarding()}
+function emailLogin(){const name=document.getElementById('loginName').value.trim();const pass=document.getElementById('loginPass').value.trim();if(!name||!pass){showNotify('enter credentials');return}const db=getDB();const entry=db[name.toLowerCase()];if(!entry){showNotify('hunter not found — register first');return}if(entry.pass&&entry.pass!==pass){showNotify('incorrect password');return}if(entry.state){loadState(name);showAwakening(false)}else{state.playerName=name;startOnboarding()}}
+function logout(){saveState();state={rank:'E',xp:0,stats:{STR:5,END:5,AGI:5,VIT:5,INT:5,SEN:5},completed:[],playerName:'HUNTER',profile:{}};onboardAnswers={};currentStep=0;document.getElementById('loginName').value='';document.getElementById('loginPass').value='';showLogin();showScreen('loginScreen')}
+
+function startOnboarding(){currentStep=0;onboardAnswers={};renderOnboardStep();showScreen('onboardScreen')}
+function renderOnboardStep(){
+  const step=ONBOARD_STEPS[currentStep];
+  document.getElementById('onboardProgress').innerHTML=ONBOARD_STEPS.map((_,i)=>`<div class="onboard-dot ${i<=currentStep?'done':''}"></div>`).join('');
+  document.getElementById('stepContainer').innerHTML=`<div class="onboard-header"><div class="onboard-sys">⬡ ${step.sys} ⬡</div><div class="onboard-q">${step.q}</div><div class="onboard-sub">${step.sub}</div></div><div class="onboard-options">${step.options.map((o,i)=>`<div class="onboard-option" onclick="selectOption(${i})" data-idx="${i}"><div class="onboard-option-icon">${o.icon}</div><div><div class="onboard-option-title">${o.title}</div><div class="onboard-option-desc">${o.desc}</div></div></div>`).join('')}</div><div class="step-btn-row">${currentStep>0?`<button class="step-btn-back" onclick="prevStep()">← back</button>`:''}<button class="step-btn-next" id="nextBtn" onclick="nextStep()" ${onboardAnswers[step.key]===undefined?'disabled':''}>${currentStep<ONBOARD_STEPS.length-1?'next →':'complete awakening'}</button></div>`;
+  if(onboardAnswers[step.key]!==undefined){const opt=document.querySelector(`.onboard-option[data-idx="${onboardAnswers[step.key]}"]`);if(opt)opt.classList.add('selected')}
+}
+function selectOption(idx){document.querySelectorAll('.onboard-option').forEach(o=>o.classList.remove('selected'));document.querySelectorAll('.onboard-option')[idx].classList.add('selected');onboardAnswers[ONBOARD_STEPS[currentStep].key]=idx;document.getElementById('nextBtn').disabled=false}
+function nextStep(){if(onboardAnswers[ONBOARD_STEPS[currentStep].key]===undefined)return;if(currentStep<ONBOARD_STEPS.length-1){currentStep++;renderOnboardStep()}else finishOnboarding()}
+function prevStep(){if(currentStep>0){currentStep--;renderOnboardStep()}}
+function finishOnboarding(){
+  const levelTitle=ONBOARD_STEPS[0].options[onboardAnswers['level']||0].title;
+  const goalTitle=ONBOARD_STEPS[1].options[onboardAnswers['goal']||0].title;
+  state.rank=STARTING_RANK[levelTitle]||'E';
+  const boosts=STAT_BOOSTS[goalTitle]||STAT_BOOSTS['Overall Fitness'];
+  Object.keys(boosts).forEach(k=>{state.stats[k]=Math.min(20,5+boosts[k])});
+  state.xp=0;state.completed=[];saveState();showAwakening(true);
+}
+function showAwakening(isNew){
+  document.getElementById('awakenRankDisplay').textContent='RANK '+state.rank;
+  document.getElementById('awakenNameDisplay').textContent=state.playerName.toUpperCase();
+  const subs={E:'your shadow awakens',D:'power stirs within you',C:'the dungeon gates open',B:'few can stand before you',A:'the world trembles',S:'you are the shadow monarch'};
+  document.getElementById('awakenSubDisplay').textContent=isNew?'your journey begins now':(subs[state.rank]||'welcome back, hunter');
+  showScreen('awakenScreen');
+}
+function enterApp(){
+  document.getElementById('appPlayerName').textContent=state.playerName.toUpperCase();
+  if(state.profile){
+    const fields={pAge:'age',pGender:'gender',pHeight:'height',pWeight:'weight',pGoal:'goal',pHealth:'health',pDiet:'diet',pEquip:'equip',pExtra:'extra'};
+    Object.entries(fields).forEach(([id,key])=>{if(state.profile[key])document.getElementById(id).value=state.profile[key]});
+    if(state.profile.planRendered){document.getElementById('aiPlanWrap').style.display='block';document.getElementById('aiPlanWrap').innerHTML=state.profile.planRendered}
+  }
+  renderAll();showScreen('appScreen');
+}
+
+function generatePlan(){
+  const age=parseInt(document.getElementById('pAge').value)||0;
+  const gender=document.getElementById('pGender').value;
+  const height=parseInt(document.getElementById('pHeight').value)||0;
+  const weight=parseInt(document.getElementById('pWeight').value)||0;
+  const goal=document.getElementById('pGoal').value;
+  const health=(document.getElementById('pHealth').value||'').toLowerCase();
+  const diet=document.getElementById('pDiet').value;
+  const equip=document.getElementById('pEquip').value;
+  const extra=(document.getElementById('pExtra').value||'').toLowerCase();
+  if(!age||!gender||!height||!weight||!goal||!diet||!equip){showNotify('fill in all your details first');return}
+
+  state.profile={age,gender,height,weight,goal,health,diet,equip,extra};
+
+  const bmi=+(weight/((height/100)**2)).toFixed(1);
+  let bmiLabel,bmiClass;
+  if(bmi<18.5){bmiLabel='Underweight';bmiClass='bmi-under'}
+  else if(bmi<25){bmiLabel='Normal';bmiClass='bmi-normal'}
+  else if(bmi<30){bmiLabel='Overweight';bmiClass='bmi-over'}
+  else{bmiLabel='Obese';bmiClass='bmi-obese'}
+
+  const hasKnee=health.includes('knee');
+  const hasBack=health.includes('back');
+  const hasAsthma=health.includes('asthma');
+  const hasDiabetes=health.includes('diabetes')||health.includes('diabetic');
+  const hasHeart=health.includes('heart');
+  const hasShoulder=health.includes('shoulder');
+  const isVeg=diet==='Vegetarian'||diet==='Vegan';
+  const isVegan=diet==='Vegan';
+  const noEquip=equip.includes('No equipment');
+  const basicEquip=equip.includes('Basic');
+  const isYoung=age<18;
+  const isSenior=age>=40;
+  const isLoseWeight=goal.includes('Lose');
+  const isBuildMuscle=goal.includes('muscle')||goal.includes('strength');
+  const isEndurance=goal.includes('endurance');
+  const isFlexibility=goal.includes('flexibility');
+
+  let bmr=gender==='Male'?88.36+(13.4*weight)+(4.8*height)-(5.7*age):447.6+(9.2*weight)+(3.1*height)-(4.3*age);
+  let tdee=bmr*1.4;
+  let targetCal=isLoseWeight?Math.round(tdee-400):isBuildMuscle?Math.round(tdee+300):Math.round(tdee);
+  let targetProtein=isBuildMuscle?Math.round(weight*2):Math.round(weight*1.6);
+
+  const days=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  function buildWorkout(idx){
+    if(idx===3||idx===6)return'Active recovery — light walk, stretching 20 min';
+    if(isFlexibility)return'Yoga flow 30 min + mobility drills + deep stretching';
+    let push,pull,legs,core,cardio;
+    if(noEquip){
+      push=isBuildMuscle?'Push-ups 5×15, diamond push-ups 3×12':'Push-ups 3×12, incline push-ups 3×10';
+      pull='Bodyweight rows 3×12, reverse snow angels 3×15';
+      legs=hasKnee?'Wall sits 3×45sec, straight-leg raises 3×20':'Squats 4×20, lunges 3×12, glute bridges 3×15';
+      core=hasBack?'Dead bugs 3×10, bird dog 3×10, plank 3×30sec':'Plank 3×45sec, crunches 3×20, leg raises 3×15';
+      cardio=hasAsthma?'Low-impact marching 20 min':(isLoseWeight?'HIIT jumping jacks 20 min':'Jog in place 15 min');
+    } else if(basicEquip){
+      push=isBuildMuscle?'DB press 4×12, shoulder press 3×12':'DB press 3×12, push-ups 3×12';
+      pull='DB rows 4×12, band pull-aparts 3×20';
+      legs=hasKnee?'DB Romanian deadlift 3×12, calf raises 3×20':'DB squats 4×15, lunges 3×12, glute bridges 4×15';
+      core=hasBack?'Bird dog 3×10, dead bug 3×10':'Russian twist 3×20, plank 3×1min';
+      cardio=hasAsthma?'Brisk walk 25 min':(isLoseWeight?'Band HIIT 20 min':'Jump rope 15 min');
+    } else {
+      push=isBuildMuscle?'Bench press 4×10, incline DB press 3×12':'Bench press 3×12, shoulder press 3×12';
+      pull='Lat pulldown 4×12, cable rows 4×12, face pulls 3×15';
+      legs=hasKnee?'Leg press 4×12, leg extension 3×15':'Squats 4×12, Romanian deadlift 3×10';
+      core=hasBack?'Cable woodchop 3×12, dead bug 3×10':'Cable crunch 3×20, hanging leg raises 3×12';
+      cardio=hasAsthma?'Elliptical 20 min zone 2':(isLoseWeight?'Treadmill HIIT 20 min':'Rowing machine 15 min');
+    }
+    if(idx===0||idx===3)return`Upper — ${push} | ${pull} | ${core}`;
+    if(idx===1||idx===4)return(isLoseWeight||isEndurance)?`Cardio — ${cardio} + ${core}`:`Lower — ${legs} | ${core}`;
+    return isBuildMuscle?`Full body — ${push} | ${legs} | ${cardio}`:`Full body — ${push} | ${legs} | ${core}`;
+  }
+
+  function buildMeals(){
+    const perMeal=Math.round(targetCal/5);
+    if(isVegan)return[{l:'Morning',v:`Oats 80g + plant protein + banana (~${perMeal} kcal)`},{l:'Mid-morning',v:'Tofu scramble 100g + whole grain toast + avocado'},{l:'Lunch',v:`Brown rice 150g + lentil curry + broccoli (${targetProtein/5|0}g protein)`},{l:'Snack',v:'Roasted chickpeas + mixed nuts + apple'},{l:'Dinner',v:'Quinoa 100g + black bean stir fry + veggies'}];
+    if(isVeg)return[{l:'Morning',v:`Oats 80g + ${isBuildMuscle?3:2} boiled eggs + banana (~${perMeal} kcal)`},{l:'Mid-morning',v:`Paneer ${isBuildMuscle?100:80}g + fruit`},{l:'Lunch',v:`Rice ${isLoseWeight?100:150}g + dal + sabzi + curd`},{l:'Snack',v:`Protein shake + ${isBuildMuscle?'peanut butter toast':'apple'}`},{l:'Dinner',v:'Roti 2 + paneer/egg curry + salad'}];
+    return[{l:'Morning',v:`Oats 80g + ${isBuildMuscle?4:3} eggs + banana (~${perMeal} kcal)`},{l:'Mid-morning',v:`Protein shake (${targetProtein/5|0}g protein) + fruit`},{l:'Lunch',v:`${isLoseWeight?100:150}g chicken + brown rice + veggies`},{l:'Snack',v:isBuildMuscle?'Peanut butter + banana + milk':'Greek yogurt + nuts'},{l:'Dinner',v:`${isLoseWeight?'Grilled fish 150g + salad':'Chicken 150g + roti + sabzi'}`}];
+  }
+
+  const tips=[];
+  if(hasKnee)tips.push('⚠️ Knee protocol — avoid deep squats and jumping. Focus on leg press, wall sits, straight-leg raises. Ice knee 10 min post-training.');
+  if(hasBack)tips.push('⚠️ Back protocol — skip deadlifts and heavy overhead. Strengthen core with dead bugs and bird dogs daily.');
+  if(hasAsthma)tips.push('⚠️ Asthma protocol — warm up 10 min before cardio. Stay in zone 2 (can hold a conversation). Keep inhaler nearby.');
+  if(hasDiabetes)tips.push('⚠️ Diabetes protocol — train 1–2 hours after meals. Monitor blood sugar before and after. Prefer 30–40 min sessions.');
+  if(hasHeart)tips.push('⚠️ Cardiac protocol — consult your doctor before training. Keep heart rate below 70% max. No heavy lifting.');
+  if(hasShoulder)tips.push('⚠️ Shoulder protocol — avoid overhead pressing. Use neutral grip. Do band external rotations daily.');
+  if(isYoung)tips.push('💡 Young hunter — avoid heavy barbell lifts. Master bodyweight first. Sleep 8–9 hours for max growth hormone.');
+  if(isSenior)tips.push('💡 Veteran hunter — take 2 full rest days/week. Increase protein to '+Math.round(weight*1.8)+'g/day. Joint mobility work daily.');
+  if(bmi>=30)tips.push('💡 BMI note — start with low-impact cardio (walking, cycling) to protect joints while burning fat.');
+  if(bmi<18.5)tips.push('💡 BMI note — prioritize caloric surplus and strength over cardio. Eat every 3 hours.');
+  if(extra.includes('sleep'))tips.push('💡 Recovery alert — poor sleep kills gains. Aim 7–8 hours. Magnesium before bed improves recovery.');
+  if(extra.includes('student')||extra.includes('busy'))tips.push('💡 Busy hunter — split into two 20-min sessions if needed. Meal prep Sunday to stay on track.');
+  if(tips.length===0)tips.push('💡 No major restrictions detected — follow your protocol strictly. Consistency beats intensity.');
+
+  const motivations={'Lose weight / burn fat':'The shadows do not cling to what must be shed. Cut what is excess. Your true form awaits.','Build muscle / gain strength':'Strength is not given. It is taken — rep by rep, from the iron and the pain. Arise.','Improve endurance / cardio':'The shadow army runs without rest. Build your lungs. Build your will.','Overall fitness and health':'A balanced hunter survives every dungeon. Train all attributes. Neglect none.','Increase flexibility and mobility':'A rigid hunter breaks. A mobile hunter adapts. Your body is your greatest weapon.'};
+
+  let html=`<div class="plan-block"><div class="plan-block-title">⬡ system analysis</div>
+    <div class="plan-row"><span class="plan-day">BMI</span><span class="plan-val">${bmi} <span class="bmi-badge ${bmiClass}">${bmiLabel}</span></span></div>
+    <div class="plan-row"><span class="plan-day">TARGET</span><span class="plan-val">${targetCal} kcal/day · ${targetProtein}g protein/day</span></div>
+    <div class="plan-row"><span class="plan-day">GOAL</span><span class="plan-val">${goal}</span></div>
+    <div class="plan-row"><span class="plan-day">RANK</span><span class="plan-val">Starting at ${state.rank} — rise through the system</span></div>
+  </div>`;
+
+  if(tips.length)html+=`<div class="warn-box"><div style="margin-bottom:6px;color:#7855ff;font-size:9px;letter-spacing:2px">⬡ PERSONALIZED ALERTS</div>${tips.map(t=>`<div style="margin-bottom:4px">${t}</div>`).join('')}</div>`;
+
+  html+=`<div class="plan-block"><div class="plan-block-title">⬡ weekly training protocol</div>${days.map((d,i)=>`<div class="plan-row"><span class="plan-day">${d}</span><span class="plan-val">${buildWorkout(i)}</span></div>`).join('')}</div>`;
+  html+=`<div class="plan-block"><div class="plan-block-title">⬡ daily nutrition protocol</div>${buildMeals().map(m=>`<div class="plan-row"><span class="plan-day">${m.l.slice(0,6).toUpperCase()}</span><span class="plan-val">${m.v}</span></div>`).join('')}</div>`;
+  html+=`<div class="plan-block"><div class="plan-block-title">⬡ message from the system</div><div class="plan-note" style="color:#7855ff;font-style:italic">"${motivations[goal]||'The system has spoken. Follow your protocol. Arise.'}"</div></div>`;
+
+  const wrap=document.getElementById('aiPlanWrap');
+  wrap.style.display='block';wrap.innerHTML=html;
+  state.profile.planRendered=html;saveState();showNotify('⬡ protocol generated');
+}
+
+function getRankIndex(){return RANKS.indexOf(state.rank)}
+function getXpNeeded(){return XP_PER_RANK[getRankIndex()]||999}
+function checkRankUp(){
+  const needed=getXpNeeded();
+  if(state.xp>=needed&&getRankIndex()<RANKS.length-1){
+    state.xp-=needed;state.rank=RANKS[getRankIndex()+1];
+    Object.keys(state.stats).forEach(k=>{state.stats[k]=Math.min(99,state.stats[k]+8)});
+    saveState();
+    const subs={D:'your shadow grows stronger',C:'power beyond human limits',B:'few can stand before you',A:'the world trembles',S:'you are the shadow monarch'};
+    document.getElementById('levelUpRank').textContent='RANK '+state.rank;
+    document.getElementById('levelUpSub').textContent=subs[state.rank]||'you have become stronger';
+    document.getElementById('levelUpOverlay').classList.add('show');
+    renderAll();return true;
+  }
+  return false;
+}
+function toggleQuest(idx){
+  const key=state.rank+'_'+idx;const quest=QUESTS_BY_RANK[state.rank][idx];
+  if(state.completed.includes(key)){state.completed=state.completed.filter(k=>k!==key);state.xp=Math.max(0,state.xp-quest.xp);Object.keys(state.stats).forEach(k=>{state.stats[k]=Math.max(1,state.stats[k]-1)});showNotify('quest removed — -'+quest.xp+' xp')}
+  else{state.completed.push(key);state.xp+=quest.xp;Object.keys(state.stats).forEach(k=>{state.stats[k]=Math.min(99,state.stats[k]+1)});showNotify(quest.icon+' '+quest.name+' +'+quest.xp+' xp');setTimeout(()=>checkRankUp(),300)}
+  saveState();renderAll();
+}
+function resetQuests(){QUESTS_BY_RANK[state.rank].forEach((q,i)=>{const key=state.rank+'_'+i;if(state.completed.includes(key)){state.xp=Math.max(0,state.xp-q.xp);state.completed=state.completed.filter(k=>k!==key)}});saveState();renderAll();showNotify('daily quests reset')}
+function renderQuests(){
+  const quests=QUESTS_BY_RANK[state.rank];const list=document.getElementById('questList');list.innerHTML='';let done=0;
+  quests.forEach((q,i)=>{const key=state.rank+'_'+i;const isDone=state.completed.includes(key);if(isDone)done++;const el=document.createElement('div');el.className='quest-item'+(isDone?' done':'');el.onclick=()=>toggleQuest(i);el.innerHTML=`<div class="quest-check">${isDone?'✓':''}</div><div class="quest-info"><div class="quest-name">${q.icon} ${q.name}</div><div class="quest-detail">${q.detail}</div></div><div class="quest-xp">+${q.xp} xp</div>`;list.appendChild(el)});
+  document.getElementById('questCount').textContent=done;document.getElementById('questTotal').textContent=quests.length;
+}
+function renderStats(){
+  const colors={STR:'#f74',END:'#4af',AGI:'#4fa',VIT:'#f4a',INT:'#a4f',SEN:'#fa4'};
+  const icons={STR:'💢',END:'🫀',AGI:'⚡',VIT:'🛡️',INT:'🧠',SEN:'👁️'};
+  const grid=document.getElementById('statsGrid');grid.innerHTML='';
+  Object.entries(state.stats).forEach(([k,v])=>{const pct=Math.round((v/99)*100);const el=document.createElement('div');el.className='stat-card';el.innerHTML=`<div class="stat-icon">${icons[k]}</div><div class="stat-name">${k}</div><div class="stat-val">${v}</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pct}%;background:${colors[k]}"></div></div>`;grid.appendChild(el)});
+}
+function renderDiet(){
+  const data=DIET_BY_RANK[state.rank];const sec=document.getElementById('dietSection');
+  let html=`<div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#7855ff;letter-spacing:2px;margin-bottom:12px;text-transform:uppercase;">${data.note}</div>`;
+  data.meals.forEach(m=>{html+=`<div class="meal-card"><div class="meal-label">${m.l}</div><div class="meal-items">${m.v}</div></div>`});
+  sec.innerHTML=html;
+}
+function renderRank(){
+  const badge=document.getElementById('rankBadge');badge.className='rank-badge '+RANK_COLORS[state.rank];badge.textContent='RANK — '+state.rank;
+  const xpNeeded=getXpNeeded();const pct=Math.min(100,Math.round((state.xp/xpNeeded)*100));
+  document.getElementById('xpFill').style.width=pct+'%';document.getElementById('xpLabel').textContent=state.xp+' / '+xpNeeded;
+}
+function renderAll(){renderRank();renderQuests();renderStats();renderDiet()}
+function showTab(name,el){
+  document.querySelectorAll('.tab-content').forEach(t=>{t.style.display='none';t.classList.remove('active')});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).style.display='block';
+  document.getElementById('tab-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+}
+const pWrap=document.getElementById('particles');
+for(let i=0;i<20;i++){const p=document.createElement('div');p.className='particle';p.style.cssText=`left:${Math.random()*100}%;animation-duration:${4+Math.random()*8}s;animation-delay:${Math.random()*6}s;`;pWrap.appendChild(p)}
+</script>
+</body>
+</html>
