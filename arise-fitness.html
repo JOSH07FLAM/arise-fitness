@@ -4,7 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ARISE — Solo Leveling Fitness System</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -123,7 +122,8 @@ body{background:#0a0a12;color:#c8d4f0;font-family:'Rajdhani',sans-serif;min-heig
 .bmi-badge{display:inline-block;padding:3px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;margin-left:6px;border:1px solid}
 .bmi-under{border-color:#4af;color:#4af}.bmi-normal{border-color:#4a9;color:#4a9}.bmi-over{border-color:#fa4;color:#fa4}.bmi-obese{border-color:#f74;color:#f74}
 .warn-box{background:rgba(255,100,50,0.06);border:1px solid rgba(255,100,50,0.3);padding:10px 12px;margin-bottom:8px;font-size:12px;color:#c98;font-family:'Share Tech Mono',monospace;line-height:1.7}
-.disclaimer{font-family:'Share Tech Mono',monospace;font-size:9px;color:#445;text-align:center;margin-top:1rem;line-height:1.6;letter-spacing:1px}
+.disclaimer{font-family:'Share Tech Mono',monospace;font-size:9px;color:#445;text-align:center;margin-top:1rem;line-height:1.6}
+.user-avatar{width:32px;height:32px;border-radius:50%;border:1px solid rgba(120,80,255,0.4);margin:0 auto 6px}
 .notify{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(10,10,20,0.95);border:1px solid #7855ff;padding:10px 20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#c8d4f0;z-index:10000;letter-spacing:2px;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
 .notify.show{opacity:1}
 .level-up-overlay{position:fixed;inset:0;background:rgba(5,0,20,0.97);z-index:20000;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s}
@@ -156,24 +156,12 @@ body{background:#0a0a12;color:#c8d4f0;font-family:'Rajdhani',sans-serif;min-heig
     <div class="login-subtitle">solo leveling fitness system</div>
   </div>
   <div class="login-card">
-    <div class="login-card-title" id="loginCardTitle">hunter authentication</div>
-    <div id="loginForm">
-      <button class="google-btn" onclick="googleLogin()">
-        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-        Continue with Google
-      </button>
-      <div class="divider"><div class="divider-line"></div><div class="divider-text">or</div><div class="divider-line"></div></div>
-      <div class="input-group"><input class="sl-input" type="text" id="loginName" placeholder="Hunter name"/></div>
-      <div class="input-group"><input class="sl-input" type="password" id="loginPass" placeholder="Password"/></div>
-      <button class="sl-btn" onclick="emailLogin()">enter the system</button>
-      <div class="login-toggle">no account? <span onclick="showRegister()">register</span></div>
-    </div>
-    <div id="registerForm" style="display:none">
-      <div class="input-group"><input class="sl-input" type="text" id="regName" placeholder="Hunter name"/></div>
-      <div class="input-group"><input class="sl-input" type="password" id="regPass" placeholder="Set password"/></div>
-      <button class="sl-btn" onclick="register()">awaken</button>
-      <div class="login-toggle">have account? <span onclick="showLogin()">login</span></div>
-    </div>
+    <div class="login-card-title">hunter authentication</div>
+    <button class="google-btn" id="googleBtn" onclick="googleLogin()">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#445;text-align:center;margin-top:8px;letter-spacing:1px">sign in with your real google account</div>
   </div>
 </div>
 
@@ -199,6 +187,7 @@ body{background:#0a0a12;color:#c8d4f0;font-family:'Rajdhani',sans-serif;min-heig
   <div class="app">
     <div class="system-header">
       <div class="system-title">⬡ system window ⬡</div>
+      <img id="userAvatar" class="user-avatar" src="" style="display:none"/>
       <div class="player-name" id="appPlayerName">HUNTER</div>
       <div class="rank-badge rank-e" id="rankBadge">RANK — E</div>
       <div class="xp-bar-wrap">
@@ -230,7 +219,7 @@ body{background:#0a0a12;color:#c8d4f0;font-family:'Rajdhani',sans-serif;min-heig
     <div class="tab-content" id="tab-coach" style="display:none">
       <div class="section-title">personal profile</div>
       <div class="profile-row">
-        <div class="profile-field"><div class="profile-label">Age</div><input class="sl-input" type="number" id="pAge" placeholder="e.g. 17" min="10" max="100"/></div>
+        <div class="profile-field"><div class="profile-label">Age</div><input class="sl-input" type="number" id="pAge" placeholder="e.g. 17"/></div>
         <div class="profile-field"><div class="profile-label">Gender</div>
           <select class="sl-input" id="pGender"><option value="" disabled selected>select</option><option>Male</option><option>Female</option><option>Other</option></select>
         </div>
@@ -243,7 +232,7 @@ body{background:#0a0a12;color:#c8d4f0;font-family:'Rajdhani',sans-serif;min-heig
         <select class="sl-input" id="pGoal"><option value="" disabled selected>select your goal</option><option>Lose weight / burn fat</option><option>Build muscle / gain strength</option><option>Improve endurance / cardio</option><option>Overall fitness and health</option><option>Increase flexibility and mobility</option></select>
       </div>
       <div class="profile-field"><div class="profile-label">Health Issues / Injuries</div>
-        <textarea class="profile-textarea" id="pHealth" placeholder="e.g. lower back pain, knee injury, asthma, diabetes... or type 'none'"></textarea>
+        <textarea class="profile-textarea" id="pHealth" placeholder="e.g. knee injury, asthma, diabetes... or 'none'"></textarea>
       </div>
       <div class="profile-field"><div class="profile-label">Diet Preference</div>
         <select class="sl-input" id="pDiet"><option value="" disabled selected>select</option><option>Vegetarian</option><option>Non-vegetarian</option><option>Vegan</option><option>No preference</option></select>
@@ -254,14 +243,33 @@ body{background:#0a0a12;color:#c8d4f0;font-family:'Rajdhani',sans-serif;min-heig
       <div class="profile-field"><div class="profile-label">Anything else?</div>
         <textarea class="profile-textarea" id="pExtra" placeholder="e.g. student, busy schedule, poor sleep..."></textarea>
       </div>
-      <button class="generate-btn" id="generateBtn" onclick="generatePlan()">⬡ generate my personal protocol</button>
-      <div class="disclaimer">⚠ this is a fitness starting guide, not medical advice.<br>consult a doctor if you have serious health conditions.</div>
+      <button class="generate-btn" onclick="generatePlan()">⬡ generate my personal protocol</button>
+      <div class="disclaimer">⚠ fitness guide only — not medical advice.<br>consult a doctor for serious health conditions.</div>
       <div class="ai-plan-wrap" id="aiPlanWrap" style="display:none"></div>
     </div>
   </div>
 </div>
 
-<script>
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAod9dPulVX-KgJzb1sWR-nHbgo45qlwLw",
+  authDomain: "arise-fitness-cf85e.firebaseapp.com",
+  projectId: "arise-fitness-cf85e",
+  storageBucket: "arise-fitness-cf85e.firebasestorage.app",
+  messagingSenderId: "665308991878",
+  appId: "1:665308991878:web:caac964945a83251e41c07"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
 const RANKS=['E','D','C','B','A','S'];
 const RANK_COLORS={E:'rank-e',D:'rank-d',C:'rank-c',B:'rank-b',A:'rank-a',S:'rank-s'};
 const XP_PER_RANK=[100,200,350,500,750,999];
@@ -291,22 +299,59 @@ const STARTING_RANK={Beginner:'E',Casual:'E',Intermediate:'D',Advanced:'C'};
 const STAT_BOOSTS={'Build Strength':{STR:8,VIT:4,END:3,AGI:2,INT:2,SEN:1},'Lose Weight':{AGI:8,END:6,STR:3,VIT:3,INT:1,SEN:1},'Improve Endurance':{END:8,AGI:6,VIT:4,STR:2,INT:1,SEN:1},'Overall Fitness':{STR:4,END:4,AGI:4,VIT:4,INT:2,SEN:2}};
 
 let onboardAnswers={},currentStep=0;
+let currentUser=null;
 let state={rank:'E',xp:0,stats:{STR:5,END:5,AGI:5,VIT:5,INT:5,SEN:5},completed:[],playerName:'HUNTER',profile:{}};
 
-function getDB(){try{return JSON.parse(localStorage.getItem('sl_db')||'{}')}catch(e){return{}}}
-function saveDB(db){try{localStorage.setItem('sl_db',JSON.stringify(db))}catch(e){}}
-function saveState(){const db=getDB();if(state.playerName){db[state.playerName.toLowerCase()]={...db[state.playerName.toLowerCase()],state};saveDB(db)}}
-function loadState(name){const db=getDB();const e=db[name.toLowerCase()];if(e&&e.state){state=e.state;return true}return false}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function showNotify(msg){const el=document.getElementById('notify');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200)}
 function closeLevelUp(){document.getElementById('levelUpOverlay').classList.remove('show')}
+window.closeLevelUp=closeLevelUp;
 
-function googleLogin(){const name='Hunter_'+Math.floor(Math.random()*9000+1000);const db=getDB();if(!db[name.toLowerCase()]){state.playerName=name;startOnboarding()}else{loadState(name);showAwakening(false)}}
-function showRegister(){document.getElementById('loginForm').style.display='none';document.getElementById('registerForm').style.display='block';document.getElementById('loginCardTitle').textContent='create account'}
-function showLogin(){document.getElementById('registerForm').style.display='none';document.getElementById('loginForm').style.display='block';document.getElementById('loginCardTitle').textContent='hunter authentication'}
-function register(){const name=document.getElementById('regName').value.trim();const pass=document.getElementById('regPass').value.trim();if(!name||!pass){showNotify('fill all fields');return}const db=getDB();if(db[name.toLowerCase()]){showNotify('hunter already exists');return}db[name.toLowerCase()]={pass,state:null};saveDB(db);state.playerName=name;startOnboarding()}
-function emailLogin(){const name=document.getElementById('loginName').value.trim();const pass=document.getElementById('loginPass').value.trim();if(!name||!pass){showNotify('enter credentials');return}const db=getDB();const entry=db[name.toLowerCase()];if(!entry){showNotify('hunter not found — register first');return}if(entry.pass&&entry.pass!==pass){showNotify('incorrect password');return}if(entry.state){loadState(name);showAwakening(false)}else{state.playerName=name;startOnboarding()}}
-function logout(){saveState();state={rank:'E',xp:0,stats:{STR:5,END:5,AGI:5,VIT:5,INT:5,SEN:5},completed:[],playerName:'HUNTER',profile:{}};onboardAnswers={};currentStep=0;document.getElementById('loginName').value='';document.getElementById('loginPass').value='';showLogin();showScreen('loginScreen')}
+async function saveToFirestore(){
+  if(!currentUser)return;
+  try{await setDoc(doc(db,'users',currentUser.uid),{state},{ merge:true })}catch(e){console.log('save error',e)}
+}
+async function loadFromFirestore(){
+  if(!currentUser)return false;
+  try{
+    const snap=await getDoc(doc(db,'users',currentUser.uid));
+    if(snap.exists()&&snap.data().state){state={...state,...snap.data().state};return true}
+    return false;
+  }catch(e){return false}
+}
+
+window.googleLogin=async function(){
+  const btn=document.getElementById('googleBtn');
+  btn.textContent='connecting...';btn.disabled=true;
+  try{
+    const result=await signInWithPopup(auth,provider);
+    // onAuthStateChanged handles the rest
+  }catch(e){
+    showNotify('login failed — try again');
+    btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google';
+    btn.disabled=false;
+  }
+}
+
+window.logout=async function(){
+  await signOut(auth);
+  state={rank:'E',xp:0,stats:{STR:5,END:5,AGI:5,VIT:5,INT:5,SEN:5},completed:[],playerName:'HUNTER',profile:{}};
+  currentUser=null;
+  showScreen('loginScreen');
+}
+
+onAuthStateChanged(auth,async(user)=>{
+  if(user){
+    currentUser=user;
+    const exists=await loadFromFirestore();
+    const name=user.displayName||user.email.split('@')[0];
+    state.playerName=name;
+    const avatar=document.getElementById('userAvatar');
+    if(user.photoURL){avatar.src=user.photoURL;avatar.style.display='block'}
+    if(exists){showAwakening(false)}
+    else{startOnboarding()}
+  }
+});
 
 function startOnboarding(){currentStep=0;onboardAnswers={};renderOnboardStep();showScreen('onboardScreen')}
 function renderOnboardStep(){
@@ -315,16 +360,16 @@ function renderOnboardStep(){
   document.getElementById('stepContainer').innerHTML=`<div class="onboard-header"><div class="onboard-sys">⬡ ${step.sys} ⬡</div><div class="onboard-q">${step.q}</div><div class="onboard-sub">${step.sub}</div></div><div class="onboard-options">${step.options.map((o,i)=>`<div class="onboard-option" onclick="selectOption(${i})" data-idx="${i}"><div class="onboard-option-icon">${o.icon}</div><div><div class="onboard-option-title">${o.title}</div><div class="onboard-option-desc">${o.desc}</div></div></div>`).join('')}</div><div class="step-btn-row">${currentStep>0?`<button class="step-btn-back" onclick="prevStep()">← back</button>`:''}<button class="step-btn-next" id="nextBtn" onclick="nextStep()" ${onboardAnswers[step.key]===undefined?'disabled':''}>${currentStep<ONBOARD_STEPS.length-1?'next →':'complete awakening'}</button></div>`;
   if(onboardAnswers[step.key]!==undefined){const opt=document.querySelector(`.onboard-option[data-idx="${onboardAnswers[step.key]}"]`);if(opt)opt.classList.add('selected')}
 }
-function selectOption(idx){document.querySelectorAll('.onboard-option').forEach(o=>o.classList.remove('selected'));document.querySelectorAll('.onboard-option')[idx].classList.add('selected');onboardAnswers[ONBOARD_STEPS[currentStep].key]=idx;document.getElementById('nextBtn').disabled=false}
-function nextStep(){if(onboardAnswers[ONBOARD_STEPS[currentStep].key]===undefined)return;if(currentStep<ONBOARD_STEPS.length-1){currentStep++;renderOnboardStep()}else finishOnboarding()}
-function prevStep(){if(currentStep>0){currentStep--;renderOnboardStep()}}
+window.selectOption=function(idx){document.querySelectorAll('.onboard-option').forEach(o=>o.classList.remove('selected'));document.querySelectorAll('.onboard-option')[idx].classList.add('selected');onboardAnswers[ONBOARD_STEPS[currentStep].key]=idx;document.getElementById('nextBtn').disabled=false}
+window.nextStep=function(){if(onboardAnswers[ONBOARD_STEPS[currentStep].key]===undefined)return;if(currentStep<ONBOARD_STEPS.length-1){currentStep++;renderOnboardStep()}else finishOnboarding()}
+window.prevStep=function(){if(currentStep>0){currentStep--;renderOnboardStep()}}
 function finishOnboarding(){
   const levelTitle=ONBOARD_STEPS[0].options[onboardAnswers['level']||0].title;
   const goalTitle=ONBOARD_STEPS[1].options[onboardAnswers['goal']||0].title;
   state.rank=STARTING_RANK[levelTitle]||'E';
   const boosts=STAT_BOOSTS[goalTitle]||STAT_BOOSTS['Overall Fitness'];
   Object.keys(boosts).forEach(k=>{state.stats[k]=Math.min(20,5+boosts[k])});
-  state.xp=0;state.completed=[];saveState();showAwakening(true);
+  state.xp=0;state.completed=[];saveToFirestore();showAwakening(true);
 }
 function showAwakening(isNew){
   document.getElementById('awakenRankDisplay').textContent='RANK '+state.rank;
@@ -333,7 +378,7 @@ function showAwakening(isNew){
   document.getElementById('awakenSubDisplay').textContent=isNew?'your journey begins now':(subs[state.rank]||'welcome back, hunter');
   showScreen('awakenScreen');
 }
-function enterApp(){
+window.enterApp=function(){
   document.getElementById('appPlayerName').textContent=state.playerName.toUpperCase();
   if(state.profile){
     const fields={pAge:'age',pGender:'gender',pHeight:'height',pWeight:'weight',pGoal:'goal',pHealth:'health',pDiet:'diet',pEquip:'equip',pExtra:'extra'};
@@ -343,7 +388,7 @@ function enterApp(){
   renderAll();showScreen('appScreen');
 }
 
-function generatePlan(){
+window.generatePlan=function(){
   const age=parseInt(document.getElementById('pAge').value)||0;
   const gender=document.getElementById('pGender').value;
   const height=parseInt(document.getElementById('pHeight').value)||0;
@@ -354,107 +399,58 @@ function generatePlan(){
   const equip=document.getElementById('pEquip').value;
   const extra=(document.getElementById('pExtra').value||'').toLowerCase();
   if(!age||!gender||!height||!weight||!goal||!diet||!equip){showNotify('fill in all your details first');return}
-
   state.profile={age,gender,height,weight,goal,health,diet,equip,extra};
-
   const bmi=+(weight/((height/100)**2)).toFixed(1);
   let bmiLabel,bmiClass;
-  if(bmi<18.5){bmiLabel='Underweight';bmiClass='bmi-under'}
-  else if(bmi<25){bmiLabel='Normal';bmiClass='bmi-normal'}
-  else if(bmi<30){bmiLabel='Overweight';bmiClass='bmi-over'}
-  else{bmiLabel='Obese';bmiClass='bmi-obese'}
-
-  const hasKnee=health.includes('knee');
-  const hasBack=health.includes('back');
-  const hasAsthma=health.includes('asthma');
-  const hasDiabetes=health.includes('diabetes')||health.includes('diabetic');
-  const hasHeart=health.includes('heart');
-  const hasShoulder=health.includes('shoulder');
-  const isVeg=diet==='Vegetarian'||diet==='Vegan';
-  const isVegan=diet==='Vegan';
-  const noEquip=equip.includes('No equipment');
-  const basicEquip=equip.includes('Basic');
-  const isYoung=age<18;
-  const isSenior=age>=40;
-  const isLoseWeight=goal.includes('Lose');
-  const isBuildMuscle=goal.includes('muscle')||goal.includes('strength');
-  const isEndurance=goal.includes('endurance');
-  const isFlexibility=goal.includes('flexibility');
-
+  if(bmi<18.5){bmiLabel='Underweight';bmiClass='bmi-under'}else if(bmi<25){bmiLabel='Normal';bmiClass='bmi-normal'}else if(bmi<30){bmiLabel='Overweight';bmiClass='bmi-over'}else{bmiLabel='Obese';bmiClass='bmi-obese'}
+  const hasKnee=health.includes('knee'),hasBack=health.includes('back'),hasAsthma=health.includes('asthma'),hasDiabetes=health.includes('diabet'),hasHeart=health.includes('heart'),hasShoulder=health.includes('shoulder');
+  const isVeg=diet==='Vegetarian'||diet==='Vegan',isVegan=diet==='Vegan';
+  const noEquip=equip.includes('No'),basicEquip=equip.includes('Basic');
+  const isLoseWeight=goal.includes('Lose'),isBuildMuscle=goal.includes('muscle')||goal.includes('strength'),isEndurance=goal.includes('endurance'),isFlexibility=goal.includes('flexibility');
+  const isYoung=age<18,isSenior=age>=40;
   let bmr=gender==='Male'?88.36+(13.4*weight)+(4.8*height)-(5.7*age):447.6+(9.2*weight)+(3.1*height)-(4.3*age);
   let tdee=bmr*1.4;
   let targetCal=isLoseWeight?Math.round(tdee-400):isBuildMuscle?Math.round(tdee+300):Math.round(tdee);
   let targetProtein=isBuildMuscle?Math.round(weight*2):Math.round(weight*1.6);
-
   const days=['MON','TUE','WED','THU','FRI','SAT','SUN'];
   function buildWorkout(idx){
-    if(idx===3||idx===6)return'Active recovery — light walk, stretching 20 min';
+    if(idx===3||idx===6)return'Active recovery — light walk + stretching 20 min';
     if(isFlexibility)return'Yoga flow 30 min + mobility drills + deep stretching';
     let push,pull,legs,core,cardio;
-    if(noEquip){
-      push=isBuildMuscle?'Push-ups 5×15, diamond push-ups 3×12':'Push-ups 3×12, incline push-ups 3×10';
-      pull='Bodyweight rows 3×12, reverse snow angels 3×15';
-      legs=hasKnee?'Wall sits 3×45sec, straight-leg raises 3×20':'Squats 4×20, lunges 3×12, glute bridges 3×15';
-      core=hasBack?'Dead bugs 3×10, bird dog 3×10, plank 3×30sec':'Plank 3×45sec, crunches 3×20, leg raises 3×15';
-      cardio=hasAsthma?'Low-impact marching 20 min':(isLoseWeight?'HIIT jumping jacks 20 min':'Jog in place 15 min');
-    } else if(basicEquip){
-      push=isBuildMuscle?'DB press 4×12, shoulder press 3×12':'DB press 3×12, push-ups 3×12';
-      pull='DB rows 4×12, band pull-aparts 3×20';
-      legs=hasKnee?'DB Romanian deadlift 3×12, calf raises 3×20':'DB squats 4×15, lunges 3×12, glute bridges 4×15';
-      core=hasBack?'Bird dog 3×10, dead bug 3×10':'Russian twist 3×20, plank 3×1min';
-      cardio=hasAsthma?'Brisk walk 25 min':(isLoseWeight?'Band HIIT 20 min':'Jump rope 15 min');
-    } else {
-      push=isBuildMuscle?'Bench press 4×10, incline DB press 3×12':'Bench press 3×12, shoulder press 3×12';
-      pull='Lat pulldown 4×12, cable rows 4×12, face pulls 3×15';
-      legs=hasKnee?'Leg press 4×12, leg extension 3×15':'Squats 4×12, Romanian deadlift 3×10';
-      core=hasBack?'Cable woodchop 3×12, dead bug 3×10':'Cable crunch 3×20, hanging leg raises 3×12';
-      cardio=hasAsthma?'Elliptical 20 min zone 2':(isLoseWeight?'Treadmill HIIT 20 min':'Rowing machine 15 min');
-    }
+    if(noEquip){push=isBuildMuscle?'Push-ups 5×15, diamond push-ups 3×12':'Push-ups 3×12, incline push-ups 3×10';pull='Bodyweight rows 3×12, reverse snow angels 3×15';legs=hasKnee?'Wall sits 3×45sec, straight-leg raises 3×20':'Squats 4×20, lunges 3×12, glute bridges 3×15';core=hasBack?'Dead bugs 3×10, bird dog 3×10':'Plank 3×45sec, crunches 3×20';cardio=hasAsthma?'Low-impact marching 20 min':(isLoseWeight?'HIIT jumping jacks 20 min':'Jog in place 15 min')}
+    else if(basicEquip){push=isBuildMuscle?'DB press 4×12, shoulder press 3×12':'DB press 3×12, push-ups 3×12';pull='DB rows 4×12, band pull-aparts 3×20';legs=hasKnee?'DB Romanian deadlift 3×12, calf raises 3×20':'DB squats 4×15, lunges 3×12, glute bridges 4×15';core=hasBack?'Bird dog 3×10, dead bug 3×10':'Russian twist 3×20, plank 3×1min';cardio=hasAsthma?'Brisk walk 25 min':(isLoseWeight?'Band HIIT 20 min':'Jump rope 15 min')}
+    else{push=isBuildMuscle?'Bench press 4×10, incline DB press 3×12':'Bench press 3×12, shoulder press 3×12';pull='Lat pulldown 4×12, cable rows 4×12, face pulls 3×15';legs=hasKnee?'Leg press 4×12, leg extension 3×15':'Squats 4×12, Romanian deadlift 3×10';core=hasBack?'Cable woodchop 3×12, dead bug 3×10':'Cable crunch 3×20, hanging leg raises 3×12';cardio=hasAsthma?'Elliptical 20 min zone 2':(isLoseWeight?'Treadmill HIIT 20 min':'Rowing machine 15 min')}
     if(idx===0||idx===3)return`Upper — ${push} | ${pull} | ${core}`;
     if(idx===1||idx===4)return(isLoseWeight||isEndurance)?`Cardio — ${cardio} + ${core}`:`Lower — ${legs} | ${core}`;
     return isBuildMuscle?`Full body — ${push} | ${legs} | ${cardio}`:`Full body — ${push} | ${legs} | ${core}`;
   }
-
   function buildMeals(){
-    const perMeal=Math.round(targetCal/5);
-    if(isVegan)return[{l:'Morning',v:`Oats 80g + plant protein + banana (~${perMeal} kcal)`},{l:'Mid-morning',v:'Tofu scramble 100g + whole grain toast + avocado'},{l:'Lunch',v:`Brown rice 150g + lentil curry + broccoli (${targetProtein/5|0}g protein)`},{l:'Snack',v:'Roasted chickpeas + mixed nuts + apple'},{l:'Dinner',v:'Quinoa 100g + black bean stir fry + veggies'}];
-    if(isVeg)return[{l:'Morning',v:`Oats 80g + ${isBuildMuscle?3:2} boiled eggs + banana (~${perMeal} kcal)`},{l:'Mid-morning',v:`Paneer ${isBuildMuscle?100:80}g + fruit`},{l:'Lunch',v:`Rice ${isLoseWeight?100:150}g + dal + sabzi + curd`},{l:'Snack',v:`Protein shake + ${isBuildMuscle?'peanut butter toast':'apple'}`},{l:'Dinner',v:'Roti 2 + paneer/egg curry + salad'}];
-    return[{l:'Morning',v:`Oats 80g + ${isBuildMuscle?4:3} eggs + banana (~${perMeal} kcal)`},{l:'Mid-morning',v:`Protein shake (${targetProtein/5|0}g protein) + fruit`},{l:'Lunch',v:`${isLoseWeight?100:150}g chicken + brown rice + veggies`},{l:'Snack',v:isBuildMuscle?'Peanut butter + banana + milk':'Greek yogurt + nuts'},{l:'Dinner',v:`${isLoseWeight?'Grilled fish 150g + salad':'Chicken 150g + roti + sabzi'}`}];
+    if(isVegan)return[{l:'Morning',v:`Oats 80g + plant protein + banana (~${Math.round(targetCal/5)} kcal)`},{l:'Mid-morning',v:'Tofu scramble 100g + whole grain toast + avocado'},{l:'Lunch',v:`Brown rice 150g + lentil curry + broccoli`},{l:'Snack',v:'Roasted chickpeas + mixed nuts + apple'},{l:'Dinner',v:'Quinoa 100g + black bean stir fry + veggies'}];
+    if(isVeg)return[{l:'Morning',v:`Oats 80g + ${isBuildMuscle?3:2} boiled eggs + banana`},{l:'Mid-morning',v:`Paneer ${isBuildMuscle?100:80}g + fruit`},{l:'Lunch',v:`Rice ${isLoseWeight?100:150}g + dal + sabzi + curd`},{l:'Snack',v:`Protein shake + ${isBuildMuscle?'peanut butter toast':'apple'}`},{l:'Dinner',v:'Roti 2 + paneer/egg curry + salad'}];
+    return[{l:'Morning',v:`Oats 80g + ${isBuildMuscle?4:3} eggs + banana (~${Math.round(targetCal/5)} kcal)`},{l:'Mid-morning',v:`Protein shake + fruit`},{l:'Lunch',v:`${isLoseWeight?100:150}g chicken + brown rice + veggies`},{l:'Snack',v:isBuildMuscle?'Peanut butter + banana + milk':'Greek yogurt + nuts'},{l:'Dinner',v:`${isLoseWeight?'Grilled fish 150g + salad':'Chicken 150g + roti + sabzi'}`}];
   }
-
   const tips=[];
-  if(hasKnee)tips.push('⚠️ Knee protocol — avoid deep squats and jumping. Focus on leg press, wall sits, straight-leg raises. Ice knee 10 min post-training.');
-  if(hasBack)tips.push('⚠️ Back protocol — skip deadlifts and heavy overhead. Strengthen core with dead bugs and bird dogs daily.');
-  if(hasAsthma)tips.push('⚠️ Asthma protocol — warm up 10 min before cardio. Stay in zone 2 (can hold a conversation). Keep inhaler nearby.');
-  if(hasDiabetes)tips.push('⚠️ Diabetes protocol — train 1–2 hours after meals. Monitor blood sugar before and after. Prefer 30–40 min sessions.');
-  if(hasHeart)tips.push('⚠️ Cardiac protocol — consult your doctor before training. Keep heart rate below 70% max. No heavy lifting.');
-  if(hasShoulder)tips.push('⚠️ Shoulder protocol — avoid overhead pressing. Use neutral grip. Do band external rotations daily.');
-  if(isYoung)tips.push('💡 Young hunter — avoid heavy barbell lifts. Master bodyweight first. Sleep 8–9 hours for max growth hormone.');
-  if(isSenior)tips.push('💡 Veteran hunter — take 2 full rest days/week. Increase protein to '+Math.round(weight*1.8)+'g/day. Joint mobility work daily.');
-  if(bmi>=30)tips.push('💡 BMI note — start with low-impact cardio (walking, cycling) to protect joints while burning fat.');
-  if(bmi<18.5)tips.push('💡 BMI note — prioritize caloric surplus and strength over cardio. Eat every 3 hours.');
-  if(extra.includes('sleep'))tips.push('💡 Recovery alert — poor sleep kills gains. Aim 7–8 hours. Magnesium before bed improves recovery.');
-  if(extra.includes('student')||extra.includes('busy'))tips.push('💡 Busy hunter — split into two 20-min sessions if needed. Meal prep Sunday to stay on track.');
-  if(tips.length===0)tips.push('💡 No major restrictions detected — follow your protocol strictly. Consistency beats intensity.');
-
-  const motivations={'Lose weight / burn fat':'The shadows do not cling to what must be shed. Cut what is excess. Your true form awaits.','Build muscle / gain strength':'Strength is not given. It is taken — rep by rep, from the iron and the pain. Arise.','Improve endurance / cardio':'The shadow army runs without rest. Build your lungs. Build your will.','Overall fitness and health':'A balanced hunter survives every dungeon. Train all attributes. Neglect none.','Increase flexibility and mobility':'A rigid hunter breaks. A mobile hunter adapts. Your body is your greatest weapon.'};
-
-  let html=`<div class="plan-block"><div class="plan-block-title">⬡ system analysis</div>
-    <div class="plan-row"><span class="plan-day">BMI</span><span class="plan-val">${bmi} <span class="bmi-badge ${bmiClass}">${bmiLabel}</span></span></div>
-    <div class="plan-row"><span class="plan-day">TARGET</span><span class="plan-val">${targetCal} kcal/day · ${targetProtein}g protein/day</span></div>
-    <div class="plan-row"><span class="plan-day">GOAL</span><span class="plan-val">${goal}</span></div>
-    <div class="plan-row"><span class="plan-day">RANK</span><span class="plan-val">Starting at ${state.rank} — rise through the system</span></div>
-  </div>`;
-
+  if(hasKnee)tips.push('⚠️ Knee — avoid deep squats and jumping. Focus on leg press, wall sits. Ice 10 min post-training.');
+  if(hasBack)tips.push('⚠️ Back — skip deadlifts and heavy overhead. Strengthen core with dead bugs and bird dogs.');
+  if(hasAsthma)tips.push('⚠️ Asthma — warm up 10 min before cardio. Stay zone 2. Keep inhaler nearby.');
+  if(hasDiabetes)tips.push('⚠️ Diabetes — train 1–2 hrs after meals. Monitor blood sugar. Prefer 30–40 min sessions.');
+  if(hasHeart)tips.push('⚠️ Heart — consult doctor before training. Keep HR below 70% max. No heavy lifting.');
+  if(hasShoulder)tips.push('⚠️ Shoulder — avoid overhead pressing. Use neutral grip. Do band external rotations daily.');
+  if(isYoung)tips.push('💡 Young hunter — master bodyweight before heavy lifting. Sleep 8–9 hours for max growth hormone.');
+  if(isSenior)tips.push('💡 Veteran hunter — 2 full rest days/week. Increase protein to '+Math.round(weight*1.8)+'g/day.');
+  if(bmi>=30)tips.push('💡 Start with low-impact cardio to protect joints while burning fat.');
+  if(bmi<18.5)tips.push('💡 Prioritize caloric surplus and strength over cardio. Eat every 3 hours.');
+  if(extra.includes('sleep'))tips.push('💡 Poor sleep kills gains. Aim 7–8 hours. Magnesium before bed helps recovery.');
+  if(extra.includes('student')||extra.includes('busy'))tips.push('💡 Busy hunter — split into two 20-min sessions. Meal prep Sunday.');
+  if(tips.length===0)tips.push('💡 No major restrictions — follow your protocol strictly. Consistency beats intensity.');
+  const motivations={'Lose weight / burn fat':'The shadows do not cling to what must be shed. Cut what is excess. Your true form awaits.','Build muscle / gain strength':'Strength is not given. It is taken — rep by rep. Arise.','Improve endurance / cardio':'The shadow army runs without rest. Build your lungs. Build your will.','Overall fitness and health':'A balanced hunter survives every dungeon. Train all attributes.','Increase flexibility and mobility':'A rigid hunter breaks. A mobile hunter adapts.'};
+  let html=`<div class="plan-block"><div class="plan-block-title">⬡ system analysis</div><div class="plan-row"><span class="plan-day">BMI</span><span class="plan-val">${bmi} <span class="bmi-badge ${bmiClass}">${bmiLabel}</span></span></div><div class="plan-row"><span class="plan-day">TARGET</span><span class="plan-val">${targetCal} kcal · ${targetProtein}g protein/day</span></div><div class="plan-row"><span class="plan-day">GOAL</span><span class="plan-val">${goal}</span></div></div>`;
   if(tips.length)html+=`<div class="warn-box"><div style="margin-bottom:6px;color:#7855ff;font-size:9px;letter-spacing:2px">⬡ PERSONALIZED ALERTS</div>${tips.map(t=>`<div style="margin-bottom:4px">${t}</div>`).join('')}</div>`;
-
   html+=`<div class="plan-block"><div class="plan-block-title">⬡ weekly training protocol</div>${days.map((d,i)=>`<div class="plan-row"><span class="plan-day">${d}</span><span class="plan-val">${buildWorkout(i)}</span></div>`).join('')}</div>`;
   html+=`<div class="plan-block"><div class="plan-block-title">⬡ daily nutrition protocol</div>${buildMeals().map(m=>`<div class="plan-row"><span class="plan-day">${m.l.slice(0,6).toUpperCase()}</span><span class="plan-val">${m.v}</span></div>`).join('')}</div>`;
   html+=`<div class="plan-block"><div class="plan-block-title">⬡ message from the system</div><div class="plan-note" style="color:#7855ff;font-style:italic">"${motivations[goal]||'The system has spoken. Follow your protocol. Arise.'}"</div></div>`;
-
-  const wrap=document.getElementById('aiPlanWrap');
-  wrap.style.display='block';wrap.innerHTML=html;
-  state.profile.planRendered=html;saveState();showNotify('⬡ protocol generated');
+  const wrap=document.getElementById('aiPlanWrap');wrap.style.display='block';wrap.innerHTML=html;
+  state.profile.planRendered=html;saveToFirestore();showNotify('⬡ protocol generated');
 }
 
 function getRankIndex(){return RANKS.indexOf(state.rank)}
@@ -464,7 +460,7 @@ function checkRankUp(){
   if(state.xp>=needed&&getRankIndex()<RANKS.length-1){
     state.xp-=needed;state.rank=RANKS[getRankIndex()+1];
     Object.keys(state.stats).forEach(k=>{state.stats[k]=Math.min(99,state.stats[k]+8)});
-    saveState();
+    saveToFirestore();
     const subs={D:'your shadow grows stronger',C:'power beyond human limits',B:'few can stand before you',A:'the world trembles',S:'you are the shadow monarch'};
     document.getElementById('levelUpRank').textContent='RANK '+state.rank;
     document.getElementById('levelUpSub').textContent=subs[state.rank]||'you have become stronger';
@@ -473,16 +469,16 @@ function checkRankUp(){
   }
   return false;
 }
-function toggleQuest(idx){
+window.toggleQuest=function(idx){
   const key=state.rank+'_'+idx;const quest=QUESTS_BY_RANK[state.rank][idx];
-  if(state.completed.includes(key)){state.completed=state.completed.filter(k=>k!==key);state.xp=Math.max(0,state.xp-quest.xp);Object.keys(state.stats).forEach(k=>{state.stats[k]=Math.max(1,state.stats[k]-1)});showNotify('quest removed — -'+quest.xp+' xp')}
+  if(state.completed.includes(key)){state.completed=state.completed.filter(k=>k!==key);state.xp=Math.max(0,state.xp-quest.xp);Object.keys(state.stats).forEach(k=>{state.stats[k]=Math.max(1,state.stats[k]-1)});showNotify('quest removed')}
   else{state.completed.push(key);state.xp+=quest.xp;Object.keys(state.stats).forEach(k=>{state.stats[k]=Math.min(99,state.stats[k]+1)});showNotify(quest.icon+' '+quest.name+' +'+quest.xp+' xp');setTimeout(()=>checkRankUp(),300)}
-  saveState();renderAll();
+  saveToFirestore();renderAll();
 }
-function resetQuests(){QUESTS_BY_RANK[state.rank].forEach((q,i)=>{const key=state.rank+'_'+i;if(state.completed.includes(key)){state.xp=Math.max(0,state.xp-q.xp);state.completed=state.completed.filter(k=>k!==key)}});saveState();renderAll();showNotify('daily quests reset')}
+window.resetQuests=function(){QUESTS_BY_RANK[state.rank].forEach((q,i)=>{const key=state.rank+'_'+i;if(state.completed.includes(key)){state.xp=Math.max(0,state.xp-q.xp);state.completed=state.completed.filter(k=>k!==key)}});saveToFirestore();renderAll();showNotify('daily quests reset')}
 function renderQuests(){
   const quests=QUESTS_BY_RANK[state.rank];const list=document.getElementById('questList');list.innerHTML='';let done=0;
-  quests.forEach((q,i)=>{const key=state.rank+'_'+i;const isDone=state.completed.includes(key);if(isDone)done++;const el=document.createElement('div');el.className='quest-item'+(isDone?' done':'');el.onclick=()=>toggleQuest(i);el.innerHTML=`<div class="quest-check">${isDone?'✓':''}</div><div class="quest-info"><div class="quest-name">${q.icon} ${q.name}</div><div class="quest-detail">${q.detail}</div></div><div class="quest-xp">+${q.xp} xp</div>`;list.appendChild(el)});
+  quests.forEach((q,i)=>{const key=state.rank+'_'+i;const isDone=state.completed.includes(key);if(isDone)done++;const el=document.createElement('div');el.className='quest-item'+(isDone?' done':'');el.onclick=()=>window.toggleQuest(i);el.innerHTML=`<div class="quest-check">${isDone?'✓':''}</div><div class="quest-info"><div class="quest-name">${q.icon} ${q.name}</div><div class="quest-detail">${q.detail}</div></div><div class="quest-xp">+${q.xp} xp</div>`;list.appendChild(el)});
   document.getElementById('questCount').textContent=done;document.getElementById('questTotal').textContent=quests.length;
 }
 function renderStats(){
@@ -503,13 +499,13 @@ function renderRank(){
   document.getElementById('xpFill').style.width=pct+'%';document.getElementById('xpLabel').textContent=state.xp+' / '+xpNeeded;
 }
 function renderAll(){renderRank();renderQuests();renderStats();renderDiet()}
-function showTab(name,el){
+window.showTab=function(name,el){
   document.querySelectorAll('.tab-content').forEach(t=>{t.style.display='none';t.classList.remove('active')});
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+name).style.display='block';
-  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('tab-'+name).style.display='block';document.getElementById('tab-'+name).classList.add('active');
   if(el)el.classList.add('active');
 }
+
 const pWrap=document.getElementById('particles');
 for(let i=0;i<20;i++){const p=document.createElement('div');p.className='particle';p.style.cssText=`left:${Math.random()*100}%;animation-duration:${4+Math.random()*8}s;animation-delay:${Math.random()*6}s;`;pWrap.appendChild(p)}
 </script>
